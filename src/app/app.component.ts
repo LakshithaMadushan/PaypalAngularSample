@@ -15,30 +15,62 @@ export class AppComponent implements AfterViewChecked {
   finalAmount: number = 1;
 
   paypalConfig = {
-    env: 'sandbox',
+    env: 'sandbox',         // Optional: specify 'sandbox' environment
     client: {
       sandbox: 'Abz0BzOlbnWE5GW63IJ4U8GpIMIer6gtOpy0MkKhw1RWILixjVlw-XJYqMFRvDIxxuiMk8MZ1qtnO_G9',
       production: ''
     },
-    commit: true,
+    locale: 'en_US',
+    style: {                //Customize the PayPal Checkout Button :   https://developer.paypal.com/docs/checkout/how-to/customize-button/#
+      size: 'small',
+      color: 'gold',
+      shape: 'pill',
+      label: 'checkout',
+      tagline: 'true'
+    },
+    commit: true,           // Optional: show a 'Pay Now' button in the checkout flow
     payment: (data, actions) => {
       return actions.payment.create({
         payment: {
           transactions: [
             {amount: {total: this.finalAmount, currency: 'USD'}}
-          ]
+          ],
+          redirect_urls: {
+            return_url: 'https://example.com',
+            cancel_url: 'https://example_cancel.com'
+          }
         }
       });
     },
     onAuthorize: (data, actions) => {
+
+      return actions.payment.get()
+        .then(function (paymentDetails) {
+          // Show a confirmation using the details from paymentDetails
+          // Then listen for a click on your confirm button
+          document.querySelector('#confirm-button')
+            .addEventListener('click', function () {
+              // Execute the payment
+              return actions.payment.execute()
+                .then(function () {
+                  // Show a success page to the buyer
+                });
+            });
+        });
+
       return actions.payment.execute().then((payment) => {
-
         //when payment is successful.
-
+        console.log('Payment Complete!');
       })
+    },
+    onCancel: (data, actions) => {
+      // Show a cancel page or return to cart
+    },
+    onError: (data, actions) => {
+      // Show an error page here, when an error occurs
+      console.log('Error happened!');
     }
   };
-
 
   ngAfterViewChecked(): void {
     if (!this.addScript) {
@@ -48,7 +80,6 @@ export class AppComponent implements AfterViewChecked {
       })
     }
   }
-
 
   addPaypalScript() {
     this.addScript = true;
