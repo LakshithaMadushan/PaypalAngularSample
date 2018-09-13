@@ -21,7 +21,7 @@ export class AppComponent implements AfterViewChecked {
       production: ''
     },
     locale: 'en_US',
-    style: {                //Customize the PayPal Checkout Button :   https://developer.paypal.com/docs/checkout/how-to/customize-button/#
+    style: {                //Customize the PayPal Checkout Button :  https://developer.paypal.com/docs/checkout/
       size: 'small',
       color: 'gold',
       shape: 'pill',
@@ -51,24 +51,23 @@ export class AppComponent implements AfterViewChecked {
           document.querySelector('#confirm-button')
             .addEventListener('click', function () {
               // Execute the payment
-              return actions.payment.execute()
+              return actions.payment.execute().then((payment) => {
+                //when payment is successful.
+                console.log('Payment Complete!');
+              })
                 .then(function () {
                   // Show a success page to the buyer
                 });
             });
         });
 
-      return actions.payment.execute().then((payment) => {
-        //when payment is successful.
-        console.log('Payment Complete!');
-      })
     },
     onCancel: (data, actions) => {
       // Show a cancel page or return to cart
     },
-    onError: (data, actions) => {
+    onError: (err) => {
       // Show an error page here, when an error occurs
-      console.log('Error happened!');
+      console.log('Error happened!' + err);
     }
   };
 
