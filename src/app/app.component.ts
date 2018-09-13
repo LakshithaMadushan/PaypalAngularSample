@@ -45,19 +45,21 @@ export class AppComponent implements AfterViewChecked {
     onAuthorize: (data, actions) => {
 
       return actions.payment.get()
-        .then(function (paymentDetails) {
+        .then((paymentDetails) => {
           // Show a confirmation using the details from paymentDetails
           // Then listen for a click on your confirm button
+
+          console.log('Payment Details :  ');
+
           document.querySelector('#confirm-button')
             .addEventListener('click', function () {
               // Execute the payment
               return actions.payment.execute().then((payment) => {
                 //when payment is successful.
-                console.log('Payment Complete!');
-              })
-                .then(function () {
-                  // Show a success page to the buyer
-                });
+                console.log('Payment Complete! :  ' + payment);
+              }).then(function () {
+                // Show a success page to the buyer
+              });
             });
         });
 

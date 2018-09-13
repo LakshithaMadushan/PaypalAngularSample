@@ -1,3 +1,6 @@
-<input type="number" [(ngModel)]="finalAmount" style="padding-bottom: 10px;">
-<h2 *ngIf="paypalLoad">Paypal is loading</h2>
-<div id="paypal-checkout-btn"></div>
+<div class="paypal">
+  <input type="number" [(ngModel)]="finalAmount" style="padding-bottom: 10px;">
+  <h2 *ngIf="paypalLoad">Paypal is loading</h2>
+  <div id="paypal-checkout-btn"></div>
+</div>
+
